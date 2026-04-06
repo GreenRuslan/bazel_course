@@ -1,0 +1,10 @@
+# broken_package/BUILD.bazel
+# This package intentionally contains a missing reference!
+# It will fail resolving when `bazel query //...` evaluates the repository,
+# demonstrating how to use the `--keep_going` flag.
+
+cc_library(
+    name = "bad_target",
+    srcs = ["missing_file.cc"], # The file doesn't exist
+    deps = ["//core:fake_target_for_lecture"], # Target doesn't exist
+)

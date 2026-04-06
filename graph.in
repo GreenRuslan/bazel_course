@@ -1,0 +1,8 @@
+digraph mygraph {
+  node [shape=box];
+  "//tests:server_test"
+  "//tests:server_test" -> "//utils:string_utils"
+  "//utils:string_utils"
+  "//utils:string_utils" -> "//core:memory"
+  "//core:memory"
+}

@@ -1,0 +1,22 @@
+# app/client/BUILD.bazel
+# This BUILD file declares the frontend python binary.
+
+load("@rules_python//python:defs.bzl", "py_binary")
+
+# py_binary: Identifies an executable Python program. 
+# It takes a python file (usually with a __main__ block) and its dependencies,
+# making it executable via `bazel run`.
+py_binary(
+    name = "cli",
+    
+    # srcs: the python files needed for this binary.
+    srcs = ["cli.py"],
+    
+    # main: specifies which python file from 'srcs' is the entry point.
+    # This is optional if the name of the rule matches the name of the python snippet,
+    # but good to make explicit.
+    main = "cli.py",
+    
+    # We depend on utils/format here, which in turn depends on core/base_logger.
+    deps = ["//utils:format"],
+)

@@ -1,0 +1,18 @@
+# MODULE.bazel specifies the root of the Bzlmod-managed workspace.
+# Bzlmod is the modern dependency management system used by default in Bazel 7.1.
+# It handles external dependencies, toolchains, and module versions effectively.
+
+# module(): Registers the current repository as a module named "bazel_query_tutorial".
+module(
+    name = "bazel_query_tutorial",
+    version = "1.0",
+)
+
+# bazel_dep(): Requests an external Bazel module dependency.
+# Here, we depend on "rules_python" to use python rules like py_library and py_test.
+# Version resolution is done by Bazel via the BCR (Bazel Central Registry).
+bazel_dep(name = "rules_python", version = "0.31.0")
+bazel_dep(name = "rules_cc", version = "0.2.17")
+
+# With bzlmod, you can also fetch an extension like python version initialization here, but
+# for the purposes of the query tutorial, the basic rules_python provides basic capabilities!

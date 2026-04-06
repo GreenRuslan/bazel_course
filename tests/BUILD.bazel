@@ -1,0 +1,50 @@
+# tests/BUILD.bazel
+# This BUILD file declares automated tests for our components.
+# This showcases 'cc_test' and 'py_test', as well as attributes like 'size' and 'tags'.
+
+load("@rules_python//python:defs.bzl", "py_test")
+
+# cc_test: A rule that compiles a binary and then executes it as part of `bazel test`.
+# By default, a test is expected to exit with 0 to pass.
+cc_test(
+    # name: Identifier for the test. '//tests:server_test'
+    name = "server_test",
+    srcs = ["server_test.cc"],
+    
+    # We depend on utils/string_utils for testing since we are simulating
+    # an integration test covering utility functions.
+    deps = ["//utils:string_utils"],
+    
+    # size: Specifies the relative size/runtime of the test.
+    # Allowed values include "small", "medium", "large", "enormous".
+    # `bazel query` can filter by this! e.g., `bazel query 'attr(size, large, //tests/...)'`
+    size = "large",
+    
+    # tags: String metadata labels attached to a rule.
+    # "flaky" is a special bazel tag that means if the test fails, bazel should
+    # re-run it automatically (usually up to 3 times) before giving up.
+    # Other examples: "exclusive" (run strictly one-at-a-time), "manual" (do not run in `//...`).
+    tags = ["flaky", "integration"],
+)
+
+# py_test: Runs a python script as a test.
+py_test(
+    name = "client_test",
+    srcs = ["client_test.py"],
+    # We test the format utility used by the client.
+    deps = ["//utils:format"],
+    
+    size = "small",
+    tags = ["unit"],
+)
+
+# New test specifically to demonstrate overlapping graphs and set operations
+cc_test(
+    name = "shared_test",
+    srcs = ["shared_test.cc"],
+    deps = [
+        "//core:memory",
+        "//utils:string_utils",
+    ],
+    tags = ["integration"],
+)

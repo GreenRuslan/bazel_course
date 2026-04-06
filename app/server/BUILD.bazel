@@ -1,0 +1,19 @@
+# app/server/BUILD.bazel
+# This BUILD file declares the main backend server executable.
+
+# genrule: Executes a shell command to generate files during the build.
+genrule(
+    name = "generate_config",
+    srcs = ["config.template"],
+    outs = ["generated_config.h"],
+    # We use our tool dependency here!
+    tools = ["//tools/codegen:generator"],
+    # $(location) gets the path to the tool, $< is the input, $@ is the output
+    cmd = "$(location //tools/codegen:generator) $< $@",
+)
+
+cc_binary(
+    name = "main",
+    srcs = ["main.cc", "generated_config.h"],
+    deps = ["//utils:string_utils"],
+)

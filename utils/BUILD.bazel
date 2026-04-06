@@ -1,0 +1,28 @@
+# utils/BUILD.bazel
+# This BUILD file declares utility libraries, demonstrating dependencies between packages.
+
+load("@rules_python//python:defs.bzl", "py_library")
+load("@rules_cc//cc:defs.bzl", "cc_library")
+
+# cc_library is reused here. Notice how it forms a dependency graph.
+cc_library(
+    name = "string_utils",
+    srcs = ["string_utils.cc"],
+    hdrs = ["string_utils.h"],
+    # deps: Lists other targets that this target depends on.
+    # Here, string_utils needs the 'MemoryTracker' from the '//core:memory' target.
+    # The build system guarantees that '//core:memory' is built and linked
+    # before or alongside 'string_utils'.
+    deps = ["//core:memory"],
+    visibility = ["//visibility:public"],
+)
+
+# py_library depends on another py_library using 'deps'.
+py_library(
+    name = "format",
+    srcs = ["format.py"],
+    # In python, dependencies add the parent directories of the targets
+    # to the PYTHONPATH so they can be securely imported.
+    deps = ["//core:base_logger"],
+    visibility = ["//visibility:public"],
+)

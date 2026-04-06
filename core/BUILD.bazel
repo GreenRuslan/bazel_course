@@ -1,0 +1,43 @@
+# core/BUILD.bazel
+# This BUILD file declares targets for the core foundation of our tutorial workspace.
+
+# We load the Python rules from the rules_python module we declared in MODULE.bazel
+load("@rules_python//python:defs.bzl", "py_library")
+
+# cc_library: This rule is used to compile C++ source code into a library statically
+# or dynamically, depending on the toolchain and dependencies.
+cc_library(
+    # name: A unique identifier for this target within the package.
+    # Other targets will use this name to depend on it, using the label '//core:memory'.
+    name = "memory",
+    
+    # srcs: The C++ source files (.cc, .cpp, etc.) that implement the logic.
+    srcs = ["memory.cc"],
+    
+    # hdrs: The header files (.h, .hpp, etc.) that describe the public API.
+    # When another target depends on this one, Bazel allows that target's source files
+    # to `#include` these headers.
+    hdrs = ["memory.h"],
+    
+    # visibility: A list specifying who can depend on this target.
+    # "//visibility:public" allows any target in this workspace or other workspaces
+    # (if they depend on our module) to depend on this library.
+    visibility = ["//visibility:public"],
+)
+
+# py_library: This rule is used to create a conceptual Python library. It just bundles up
+# `.py` files to make them available to other Python targets via the PYTHONPATH.
+py_library(
+    name = "base_logger",
+    srcs = ["base_logger.py"],
+    visibility = ["//visibility:public"],
+)
+
+# cc_library with restricted visibility: To demonstrate the visible() query.
+cc_library(
+    name = "secret_module",
+    srcs = ["memory.cc"], # Reusing a source file just for demonstration
+    hdrs = ["memory.h"],
+    # THIS TARGET CAN ONLY BE USED BY //app/server
+    visibility = ["//app/server:__pkg__"],
+)
