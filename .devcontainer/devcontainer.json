@@ -1,0 +1,19 @@
+{
+  "name": "Bazel Course",
+  "image": "mcr.microsoft.com/devcontainers/cpp:1-ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    }
+  },
+  "onCreateCommand": "bash .devcontainer/install-bazel.sh",
+  "postCreateCommand": "bazel version",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bazelbuild.vscode-bazel"
+      ]
+    }
+  },
+  "remoteUser": "vscode"
+}
