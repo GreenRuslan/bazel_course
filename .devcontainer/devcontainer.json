@@ -6,7 +6,7 @@
       "version": "3.11"
     }
   },
-  "onCreateCommand": "bash .devcontainer/install-bazel.sh",
+  "onCreateCommand": "curl -Lo /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 && chmod +x /usr/local/bin/bazel",
   "postCreateCommand": "bazel version",
   "customizations": {
     "vscode": {
