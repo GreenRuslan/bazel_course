@@ -1,0 +1,19 @@
+{
+  "name": "Bazel Course",
+  "image": "mcr.microsoft.com/devcontainers/cpp:1-ubuntu-22.04",
+  "features": {
+    "ghcr.io/devcontainers/features/python:1": {
+      "version": "3.11"
+    }
+  },
+  "onCreateCommand": "sudo curl -Lo /usr/local/bin/bazel https://github.com/bazelbuild/bazelisk/releases/latest/download/bazelisk-linux-amd64 && sudo chmod +x /usr/local/bin/bazel",
+  "postCreateCommand": "bazel version",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "bazelbuild.vscode-bazel"
+      ]
+    }
+  },
+  "remoteUser": "vscode"
+}
