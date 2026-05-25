@@ -5,6 +5,6 @@
 
 cc_library(
     name = "bad_target",
-    srcs = ["missing_file.cc"], # The file doesn't exist
-    deps = ["//core:fake_target_for_lecture"], # Target doesn't exist
+    srcs = [],
+    deps = [],
 )

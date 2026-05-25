@@ -1,0 +1,5 @@
+--- a/BUILD
++++ b/BUILD
+@@ -1 +1,2 @@
+ cc_library(name="lib", srcs=["lib.c"])
++# fixed

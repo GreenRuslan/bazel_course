@@ -1,0 +1,6 @@
+--- a/BUILD
++++ b/BUILD
+@@ -1,2 +1,3 @@
+ cc_library(name="lib", srcs=["lib.c"])
+ # fixed
++    visibility = ["//visibility:public"],
