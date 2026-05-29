@@ -24,6 +24,19 @@ int main() {
     utils::StringUtils::allocate_string(tracker, 100);
     ASSERT_EQ(tracker.allocated_bytes(), 100);
 
+    // Verify select() and config_setting logic
+    std::string sys_name = utils::StringUtils::get_system_name();
+    std::string build_mode = utils::StringUtils::get_build_mode();
+    
+    std::cout << "[INFO] System detected via select(): " << sys_name << std::endl;
+    std::cout << "[INFO] Build mode detected via select(): " << build_mode << std::endl;
+
+    // Basic validity check (must return one of the expected strings, not empty)
+    if (sys_name != "macOS" && sys_name != "Linux" && sys_name != "Unknown OS") {
+        std::cerr << "Assertion failed: Invalid system name returned: " << sys_name << std::endl;
+        return 1;
+    }
+
     std::cout << "[PASSED] server_test." << std::endl;
     return 0;
 }

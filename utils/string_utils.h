@@ -12,6 +12,12 @@ class StringUtils {
 public:
     static std::string to_upper(const std::string& input);
     static std::string allocate_string(core::MemoryTracker& tracker, size_t size);
+    
+    // Demonstrates OS-specific compilation using select()
+    static std::string get_system_name();
+    
+    // Demonstrates compilation-mode compilation using select()
+    static std::string get_build_mode();
 };
 
 } // namespace utils

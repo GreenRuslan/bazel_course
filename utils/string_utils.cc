@@ -16,4 +16,14 @@ std::string StringUtils::allocate_string(core::MemoryTracker& tracker, size_t si
     return std::string(size, 'A');
 }
 
+std::string StringUtils::get_build_mode() {
+#if defined(OPT_BUILD)
+    return "Optimized (Release)";
+#elif defined(DBG_BUILD)
+    return "Debug";
+#else
+    return "Fastbuild (Default)";
+#endif
+}
+
 } // namespace utils

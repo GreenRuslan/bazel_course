@@ -4,16 +4,47 @@
 load("@rules_python//python:defs.bzl", "py_library")
 load("@rules_cc//cc:defs.bzl", "cc_library")
 
+# Custom config_settings to demonstrate platform-specific selections
+config_setting(
+    name = "is_osx",
+    constraint_values = ["@platforms//os:osx"],
+)
+
+config_setting(
+    name = "is_linux",
+    constraint_values = ["@platforms//os:linux"],
+)
+
+# Custom config_settings to demonstrate compilation-mode selections
+config_setting(
+    name = "optimized_build",
+    values = {"compilation_mode": "opt"},
+)
+
+config_setting(
+    name = "debug_build",
+    values = {"compilation_mode": "dbg"},
+)
+
 # cc_library is reused here. Notice how it forms a dependency graph.
 cc_library(
     name = "string_utils",
-    srcs = ["string_utils.cc"],
+    srcs = ["string_utils.cc"] + select({
+        ":is_osx": ["system_name_mac.cc"],
+        ":is_linux": ["system_name_linux.cc"],
+        "//conditions:default": ["system_name_default.cc"],
+    }),
     hdrs = ["string_utils.h"],
     # deps: Lists other targets that this target depends on.
     # Here, string_utils needs the 'MemoryTracker' from the '//core:memory' target.
     # The build system guarantees that '//core:memory' is built and linked
     # before or alongside 'string_utils'.
     deps = ["//core:memory"],
+    defines = select({
+        ":optimized_build": ["OPT_BUILD"],
+        ":debug_build": ["DBG_BUILD"],
+        "//conditions:default": [],
+    }),
     visibility = ["//visibility:public"],
 )
 
@@ -25,4 +56,30 @@ py_library(
     # to the PYTHONPATH so they can be securely imported.
     deps = ["//core:base_logger"],
     visibility = ["//visibility:public"],
+)
+
+
+config_setting(
+    name = "optimized_build",
+    values = {
+        "compilation_mode": "opt",  # Matches 'bazel build -c opt'
+    },
+)
+
+config_setting(
+    name = "debug_build",
+    values = {
+        "compilation_mode": "dbg",  # Matches 'bazel build -c dbg'
+    },
+)
+
+# 2. Use them in a rule
+cc_library(
+    name = "math_lib",
+    srcs = ["math.cc"],
+    copts = select({
+        ":optimized_build": ["-O3", "-march=native", "-DNDEBUG"],
+        ":debug_build": ["-O0", "-g", "-DDEBUG"],
+        "//conditions:default": ["-O1"],
+    }),
 )
