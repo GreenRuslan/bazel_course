@@ -3,6 +3,7 @@
 
 load("@rules_python//python:defs.bzl", "py_library")
 load("@rules_cc//cc:defs.bzl", "cc_library")
+load("//build_tools:macros.bzl", "cc_library_with_test")
 
 # Custom config_settings to demonstrate platform-specific selections
 config_setting(
@@ -57,26 +58,13 @@ py_library(
     deps = ["//core:base_logger"],
     visibility = ["//visibility:public"],
 )
-
-
-config_setting(
-    name = "optimized_build",
-    values = {
-        "compilation_mode": "opt",  # Matches 'bazel build -c opt'
-    },
-)
-
-config_setting(
-    name = "debug_build",
-    values = {
-        "compilation_mode": "dbg",  # Matches 'bazel build -c dbg'
-    },
-)
-
 # 2. Use them in a rule
-cc_library(
-    name = "math_lib",
+# Instantiate the cc_library_with_test macro we created
+cc_library_with_test(
+    name = "math",
     srcs = ["math.cc"],
+    hdrs = ["math.h"],
+    test_srcs = ["math_test.cc"],
     copts = select({
         ":optimized_build": ["-O3", "-march=native", "-DNDEBUG"],
         ":debug_build": ["-O0", "-g", "-DDEBUG"],
